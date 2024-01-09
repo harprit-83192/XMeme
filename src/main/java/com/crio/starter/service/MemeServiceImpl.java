@@ -24,6 +24,10 @@ public class MemeServiceImpl implements MemeService{
     }
 
     public String postMeme(MemeEntity meme){
+        MemeEntity existingMeme = memesRepository.findByNameAndUrlAndCaption(meme.getName(), meme.getUrl(), meme.getCaption());
+        if(existingMeme != null){
+            throw new RuntimeException("Duplicate meme found");
+        }
         MemeEntity saveMeme = memesRepository.save(meme);
         return saveMeme.getId();
     }
