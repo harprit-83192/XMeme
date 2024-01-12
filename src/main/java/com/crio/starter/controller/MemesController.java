@@ -45,6 +45,8 @@ public class MemesController {
         try{
             String id = memeService.postMeme(meme);
             return ResponseEntity.status(HttpStatus.CREATED).body(id);
+        }catch(IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }catch(RuntimeException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }

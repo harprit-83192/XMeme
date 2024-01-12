@@ -20,15 +20,18 @@ public class MemeServiceImpl implements MemeService{
     }
 
     public List<MemeEntity> getMemes(){
-        return memesRepository.findTop100Memes();
+        return memesRepository.findTop100ByOrderByIdDesc();
     }
 
     public String postMeme(MemeEntity meme){
+        if(meme == null || meme.getName().isEmpty() || meme.getCaption().isEmpty() || meme.getUrl().isEmpty()){
+            throw new IllegalArgumentException("Request can't be empty");
+        }
         MemeEntity existingMeme = memesRepository.findByNameAndUrlAndCaption(meme.getName(), meme.getUrl(), meme.getCaption());
         if(existingMeme != null){
             throw new RuntimeException("Duplicate meme found");
         }
         MemeEntity saveMeme = memesRepository.save(meme);
-        return saveMeme.getId();
+        return "{\"id\":\"" + saveMeme.getId() + "\"}";
     }
 }
